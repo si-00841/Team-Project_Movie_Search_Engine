@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>나의 영화 사이트</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 20px;
+    }
+    nav ul li {
+      display: inline;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #333;
+    }
+    .movie-card {
+      background: white;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .movie-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .movie-card img {
+      border-radius: 8px;
+      width: 100px;
+      height: auto;
+    }
+    .movie-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .movie-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .movie-rating {
+      color: #555;
+    }
+    @media (max-width: 768px) {
+      .movie-card {
+        flex-direction: column;
+        align-items: center;
+      }
+      .movie-card img {
+        width: 80%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🎬 인기 영화</h1>
+  
+  <!-- 네비게이션 바 -->
+  <nav>
+    <ul>
+      <li><a href="#">인기 영화</a></li>
+      <li><a href="#">추천 영화</a></li>
+    </ul>
+  </nav>
+
+  <!-- 검색창 -->
+  <input type="text" id="search" placeholder="영화 검색...">
+  
+  <div id="movie-list"></div>
+
+  <script>
+    // TMDb API 키
+    const API_KEY = '53b55dbc42867a260801659e03e38866';  // 여기에 실제 API 키를 넣어주세요.
+    let movies = [];  // 영화 데이터를 저장할 배열
+
+    // 영화 목록 표시 함수
+    const displayMovies = (moviesList) => {
+      const movieList = document.getElementById('movie-list');
+      movieList.innerHTML = ''; // 기존 내용을 초기화
+      moviesList.forEach(movie => {
+        const card = document.createElement('div');
+        card.className = 'movie-card';
+
+        card.innerHTML = `
+          <img src="${movie.image}" alt="${movie.title}">
+          <div class="movie-info">
+            <div class="movie-title">${movie.title}</div>
+            <div class="movie-rating">⭐ 평점: ${movie.rating} / 5</div>
+            <div class="movie-release">개봉연도: ${movie.releaseYear}</div>
+            <div class="movie-director">감독: ${movie.director}</div>
+            <div class="movie-description">${movie.description}</div>
+          </div>
+        `;
+        
+        // 영화 카드 클릭 시 상세 페이지로 이동
+        card.addEventListener('click', () => {
+          window.location.href = `movie_details.html?id=${movie.id}`;
+        });
+
+        movieList.appendChild(card);
+      });
+    };
+
+    // TMDb API로 영화 목록 가져오기
+    const fetchMovies = () => {
+      fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`)
+        .then(response => response.json())
+        .then(data => {
+          movies = data.results.map(movie => ({
+            title: movie.title,
+            rating: movie.vote_average,
+            releaseYear: movie.release_date.split('-')[0],
+            image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+            id: movie.id
+          }));
+          displayMovies(movies);  // 가져온 영화 데이터를 표시
+        })
+        .catch(error => console.error("Error fetching data: ", error));
+    };
+
+    // 검색 기능
+    const searchInput = document.getElementById('search');
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      const filteredMovies = movies.filter(movie => movie.title.toLowerCase().includes(query));
+      displayMovies(filteredMovies);
+    });
+
+    // 초기 영화 목록 가져오기
+    fetchMovies();
+  </script>
+</body>
+</html>

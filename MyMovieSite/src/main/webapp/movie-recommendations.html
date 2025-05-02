@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>영화 추천 시스템</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .movie-card {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+    .movie {
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 250px;
+      text-align: center;
+    }
+    .movie img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .movie-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .movie-rating {
+      color: #f39c12;
+    }
+    .movie-genre {
+      color: #888;
+      margin: 5px 0;
+    }
+    .form-container {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    select, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎬 영화 추천 시스템</h1>
+
+  <div class="form-container">
+    <label for="genre">장르 선택: </label>
+    <select id="genre">
+      <option value="액션">액션</option>
+      <option value="드라마">드라마</option>
+      <option value="SF">SF</option>
+      <option value="코미디">코미디</option>
+    </select>
+    <button onclick="recommendMovies()">추천 영화 보기</button>
+  </div>
+
+  <div id="recommended-movies" class="movie-card"></div>
+
+  <script>
+    const movies = [
+      { title: "어벤져스: 엔드게임", genre: "액션", rating: 4.8, image: "https://m.media-amazon.com/images/I/91oB8EbfS9L._AC_SY679_.jpg" },
+      { title: "기생충", genre: "드라마", rating: 4.6, image: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Gisaengchung_poster.jpg" },
+      { title: "인셉션", genre: "SF", rating: 4.7, image: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Inception_2010_theatrical_poster.jpg" },
+      { title: "슈퍼배드", genre: "코미디", rating: 4.5, image: "https://upload.wikimedia.org/wikipedia/en/4/42/Superbad_poster.jpg" }
+    ];
+
+    function recommendMovies() {
+      const genre = document.getElementById('genre').value;
+      const recommended = movies.filter(movie => movie.genre === genre);
+      const recommendedMoviesDiv = document.getElementById('recommended-movies');
+      
+      recommendedMoviesDiv.innerHTML = recommended.map(movie => `
+        <div class="movie">
+          <img src="${movie.image}" alt="${movie.title}">
+          <div class="movie-title">${movie.title}</div>
+          <div class="movie-genre">${movie.genre}</div>
+          <div class="movie-rating">⭐ 평점: ${movie.rating}</div>
+        </div>
+      `).join('');
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>영화 상세 정보</title>
+  <style>
+    /* 기본 스타일 */
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+      margin: 0;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      font-size: 2rem;
+    }
+    .movie-details {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .movie-details img {
+      border-radius: 8px;
+      max-width: 300px;
+      height: auto;
+      margin: 0 auto;
+    }
+    .movie-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .movie-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .movie-description {
+      color: #555;
+      margin-top: 10px;
+    }
+    .movie-rating {
+      color: #f39c12;
+      font-size: 1.2rem;
+      margin-top: 5px;
+    }
+    .movie-release {
+      color: #888;
+      margin-top: 5px;
+    }
+    .movie-trailer iframe {
+      margin: 20px 0;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 560px;
+      height: 315px;
+    }
+    .movie-reviews {
+      margin-top: 30px;
+    }
+    .review-item {
+      background: #f9f9f9;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 10px 0;
+      resize: none;
+      font-size: 1rem;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎬 영화 상세 정보</h1>
+
+  <div id="movie-detail" class="movie-details"></div>
+
+  <script>
+    // 영화 목록 (예시 데이터)
+    const movies = [
+      {
+        id: 1,
+        title: "어벤져스: 엔드게임",
+        rating: 4.8,
+        image: "https://m.media-amazon.com/images/I/91oB8EbfS9L._AC_SY679_.jpg",
+        description: "어벤져스: 엔드게임은 마블 시네마틱 유니버스(MCU)의 최종 결전을 다룬 영화입니다.",
+        release_date: "2019-04-26",
+        trailer: "https://www.youtube.com/embed/TcMBFSGVi1c"
+      },
+      {
+        id: 2,
+        title: "기생충",
+        rating: 4.6,
+        image: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Gisaengchung_poster.jpg",
+        description: "기생충은 한 가족의 이야기를 통해 한국 사회의 양극화 문제를 다룬 작품입니다.",
+        release_date: "2019-05-30",
+        trailer: "https://www.youtube.com/embed/5xH0HfJHsaY"
+      },
+      {
+        id: 3,
+        title: "인셉션",
+        rating: 4.7,
+        image: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Inception_2010_theatrical_poster.jpg",
+        description: "인셉션은 꿈을 다루는 과학적, 철학적 이야기를 바탕으로 한 스릴러 영화입니다.",
+        release_date: "2010-07-16",
+        trailer: "https://www.youtube.com/embed/YoHD9XEInc0"
+      },
+      {
+        id: 4,
+        title: "해리 포터와 마법사의 돌",
+        rating: 4.9,
+        image: "https://upload.wikimedia.org/wikipedia/en/5/5f/Harry_Potter_and_the_Sorcerer%27s_Stone_%282001_film%29_theatrical_poster.jpg",
+        description: "해리 포터와 마법사의 돌은 마법의 세계로의 첫 발걸음을 내딛는 이야기입니다.",
+        release_date: "2001-11-10",
+        trailer: "https://www.youtube.com/embed/VyHV0BRtdxo"
+      }
+    ];
+
+    // URL에서 영화 ID 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieId = urlParams.get('id');
+
+    // 영화 데이터 검색
+    const movie = movies.find(m => m.id === parseInt(movieId));
+
+    if (movie) {
+      const movieDetail = document.getElementById('movie-detail');
+      movieDetail.innerHTML = `
+        <img src="${movie.image}" alt="${movie.title}">
+        <div class="movie-info">
+          <div class="movie-title">${movie.title}</div>
+          <div class="movie-description">${movie.description}</div>
+          <div class="movie-rating">⭐ 평점: ${movie.rating} / 5</div>
+          <div class="movie-release">개봉일: ${movie.release_date}</div>
+        </div>
+
+        <div class="movie-trailer">
+          <h2>🎥 예고편</h2>
+          <iframe src="${movie.trailer}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+        <div class="movie-reviews">
+          <h2>🔍 영화 리뷰</h2>
+          <form id="review-form">
+            <textarea id="review-text" placeholder="영화에 대한 리뷰를 작성하세요..."></textarea><br>
+            <button type="submit">리뷰 추가</button>
+          </form>
+          <div id="reviews"></div>
+        </div>
+      `;
+
+      // 리뷰 관리
+      const reviewForm = document.getElementById('review-form');
+      const reviewText = document.getElementById('review-text');
+      const reviewsDiv = document.getElementById('reviews');
+
+      // 로컬 스토리지에서 리뷰 불러오기
+      const loadReviews = () => {
+        const savedReviews = JSON.parse(localStorage.getItem(`movie_reviews_${movie.id}`)) || [];
+        reviewsDiv.innerHTML = savedReviews.map(review => `
+          <div class="review-item">
+            <p>${review}</p>
+          </div>
+        `).join('');
+      };
+
+      // 리뷰 추가 이벤트 처리
+      reviewForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newReview = reviewText.value.trim();
+        if (newReview) {
+          const savedReviews = JSON.parse(localStorage.getItem(`movie_reviews_${movie.id}`)) || [];
+          savedReviews.push(newReview);
+          localStorage.setItem(`movie_reviews_${movie.id}`, JSON.stringify(savedReviews));
+          reviewText.value = ''; // 리뷰 입력창 초기화
+          loadReviews(); // 새 리뷰 목록 불러오기
+        }
+      });
+
+      loadReviews(); // 페이지 로드 시 리뷰 목록 불러오기
+    } else {
+      document.body.innerHTML = '<h1>영화 정보를 찾을 수 없습니다.</h1>';
+    }
+  </script>
+
+</body>
+</html>
