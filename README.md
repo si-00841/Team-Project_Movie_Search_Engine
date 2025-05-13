@@ -1,3 +1,4 @@
+
 # 🎬 빅데이터 플랫폼 팀 프로젝트
 
 📅 **프로젝트 기간**: 2025.04.01 ~ 2025.04.14
@@ -38,6 +39,36 @@
 
 ---
 
+## ⚙️ 데이터 수집 및 가공
+
+### 🔹 1단계: TMDB API를 활용한 영화 데이터 수집 (`tmdbMovies.py`)
+
+- TMDB API를 이용해 **수천 건의 영화 데이터를 페이지 단위로 자동 수집**합니다.
+- 수집된 데이터는 Elasticsearch 인덱스(`tmdb-movies`)에 저장됩니다.
+- 빈 `release_date` 필드는 `None` 처리하여 저장 오류를 방지합니다.
+
+```python
+# 주요 기능 요약
+- TMDB API로부터 영화 정보 수집
+- Elasticsearch 인덱스 "tmdb-movies"에 저장
+- release_date 값 보정
+```
+
+### 🔹 2단계: 영화 정보 자동 한글 번역 (`tmdbMoviesKo2Bigdata.py`)
+
+- 기존에 저장한 영화 데이터의 주요 필드(`title`, `overview`, `original_language`)를 **Google 번역기를 통해 자동 한글 번역**합니다.
+- 번역된 결과는 새로운 Elasticsearch 인덱스(`tmdb-movies-ko`)에 별도로 저장하여 다국어 지원이 가능하도록 구성하였습니다.
+
+```python
+# 주요 기능 요약
+- Elasticsearch Scroll API로 대량 문서 순차 조회
+- deep-translator를 사용하여 주요 영화 정보를 한글 번역
+- 새로운 인덱스 "tmdb-movies-ko"에 번역 결과 저장
+- 문서 수가 많을 경우 배치 단위로 안정적으로 처리
+```
+
+---
+
 ## 🔍 테스트 화면 결과
 
 ### 🔹 첫 화면 (검색창 출력)
@@ -68,6 +99,17 @@
 
 ---
 
-📌 **향후 계획**  
-추가 기능은 차차 개발하여 반영할 예정입니다.
+## 📌 향후 계획
+
+- 영화 평점 기반 추천 기능 추가
+- 시리즈 기반 영화 자동 연결 기능
+- Elastic 기반 자동 완성 기능 적용
+- 검색 UI 반응속도 최적화
+
+---
+
+📁 **관련 코드 파일 목록**  
+- `tmdbMovies.py` : TMDB 영화 수집 및 Elasticsearch 저장  
+- `tmdbMoviesKo2Bigdata.py` : 저장된 영화 정보 한글 번역 및 재저장  
+
 ---
